@@ -65,6 +65,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -78,6 +79,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\speedPoint.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\collectPoint.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\negativePoint.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player2_2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player2.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player1.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
