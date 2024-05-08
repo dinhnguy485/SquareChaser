@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ISC3U
+//6th May 2024
+//Square Chaser
+//Tri Nguyen
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,9 +16,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-//6th May 2024
-//Square Chaser
-//Tri Nguyen
 namespace SquareChaser
 {
     public partial class MainForm : Form
