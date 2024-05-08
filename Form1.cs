@@ -11,10 +11,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+//6th May 2024
+//Square Chaser
+//Tri Nguyen
 namespace SquareChaser
 {
     public partial class MainForm : Form
     {
+        //Set up players variables.
         Random randGen = new Random();
         Stopwatch orbMoveStopwatch = new Stopwatch();
 
@@ -31,14 +35,17 @@ namespace SquareChaser
         SoundPlayer collectPoint = new SoundPlayer(Properties.Resources.collectPoint);
         SoundPlayer speedPoint = new SoundPlayer(Properties.Resources.speedPoint);
         SoundPlayer negativePoint = new SoundPlayer(Properties.Resources.negativePoint);
+        SoundPlayer winnerSound = new SoundPlayer(Properties.Resources.winningSound);
 
-
+        // Set up players stats.
         int player1Score = 0;
         int player2Score = 0;
-
         int player1Speed = 4;
         int player2Speed = 4;
+        int bullets1Direction = 0;
+        int bullets2Direction = 0;
 
+        //set up players movement.
         bool wPressed = false;
         bool aPressed = false;
         bool dPressed = false;
@@ -52,20 +59,16 @@ namespace SquareChaser
         bool gPressed = false;
         bool mPressed = false;
 
-        SolidBrush blackBrush = new SolidBrush(Color.Black);
+        //set up the colors and pictures.
         SolidBrush yellowBrush = new SolidBrush(Color.Yellow);
-        SolidBrush pinkBrush = new SolidBrush(Color.HotPink);
         SolidBrush redBrush = new SolidBrush(Color.Red);
-        SolidBrush blueBrush = new SolidBrush(Color.LightSkyBlue);
-        SolidBrush greenBrush = new SolidBrush(Color.SeaGreen);
         SolidBrush whiteBrush = new SolidBrush(Color.White);
         Pen whitePen = new Pen(Color.White,10);
         Font drawFont = new Font("Times New Roman", 13, FontStyle.Bold);
 
-
-
         public MainForm()
         {
+            // generate random position at the start for every orbs.
             InitializeComponent();
             int xRandom = randGen.Next(60, 390);
             int yRandom = randGen.Next(60, 340);
@@ -85,6 +88,7 @@ namespace SquareChaser
             orbMoveStopwatch.Start();
         }
 
+        //set up the keys when it is pressed.
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -118,11 +122,12 @@ namespace SquareChaser
                     rightPressed = true;
                     break;
                 case Keys.M:
-                    mPressed = false;
+                    mPressed = true;
                     break;
             }
         }
 
+        //set up the keys when it is released.
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -162,8 +167,7 @@ namespace SquareChaser
             }
         }
 
-
-
+        //create a new point position everytime the method is called.
         private void UpdatePointOrb()
         {
             int xNewRandom = randGen.Next(60, 390);
@@ -172,6 +176,7 @@ namespace SquareChaser
             pointOrbs.Y = yNewRandom;
         }
 
+        //create a new speed point position everytime the method is called.
         private void UpdateSpeedOrb()
         {
             int xNewRandom = randGen.Next(60, 390);
@@ -180,6 +185,7 @@ namespace SquareChaser
             speedOrbs.Y = yNewRandom;
         }
 
+        //create a new negative point position everytime the method is called.
         private void UpdateNegativeOrb()
         {
             int xNewRandom = randGen.Next(60, 390);
@@ -188,6 +194,7 @@ namespace SquareChaser
             negativeOrbs.Y = yNewRandom;
         }
 
+        //Handle when players hit the negative orbs, decrease their speed
         private void HandleNegativeIntersection()
         {
             if (negativeOrbs.IntersectsWith(player1))
@@ -195,18 +202,17 @@ namespace SquareChaser
                 UpdateNegativeOrb();
                 player1Speed -= 1;
                 negativePoint.Play();
-
-
             }
+
             if (negativeOrbs.IntersectsWith(player2))
             {
                 UpdateNegativeOrb();
                 player2Speed -= 1;
                 negativePoint.Play();
-
             }
         }
 
+        //Handle when players hit the speed orbs, increae their speed
         private void HandleSpeedrInctersection()
         {
             if (speedOrbs.IntersectsWith(player1))
@@ -223,6 +229,7 @@ namespace SquareChaser
             }
         }
 
+        //Handle when player hit the point orbs, increase their score
         private void HandlePointOrbIntersections()
         {
             if (pointOrbs.IntersectsWith(player2))
@@ -231,7 +238,6 @@ namespace SquareChaser
                 player2Score++;
                 player2ScoreLabel.Text = $"{player2Score}";
                 collectPoint.Play();
-                orbMoveStopwatch.Restart();
             }
             if (pointOrbs.IntersectsWith(player1))
             {
@@ -239,35 +245,63 @@ namespace SquareChaser
                 player1Score++;
                 player1ScoreLabel.Text = $"{player1Score}";
                 collectPoint.Play();
-                orbMoveStopwatch.Restart();
             }
         }
 
-        private void HandleBoundary(Rectangle player)
+        //Handle when players hit the boundary, teleport them to the other side.
+        //For Bullets, handle when it hit the boundary, reset the direction, teleport the bullet to the player's position
+        private void HandleBoundary(ref Rectangle player, ref Rectangle bullet, ref int bulletDirection)
         {
             if (player.Y <= 55)
             {
                 player.Y = 375;
+                bullet.Y = player.Y + 7;
             }
             else if (player.Y >= 375)
             {
                 player.Y = 55;
+                bullet.Y = player.Y + 7;
             }
             else if (player.X <= 55)
             {
                 player.X = 425;
+                bullet.X = player.X + 7;
             }
             else if (player.X >= 425)
             {
                 player.X = 55;
+                bullet.X = player.X + 7;
+            }
+
+            if (bullet.Y <= 55)
+            {
+                bullet.Y = player.Y + 7;
+                bulletDirection = 0;
+                
+            }
+            else if (bullet.Y >= 375)
+            {
+                bullet.Y = player.Y + 7;
+                bulletDirection = 0;
+            }
+            else if (bullet.X <= 55)
+            {
+                bullet.X = player.X + 7;
+                bulletDirection = 0;
+            }
+            else if (bullet.X >= 425)
+            {
+                bullet.X = player.X + 7;
+                bulletDirection = 0;
             }
         }
 
+        //Teleports point orbs when it isn't hit by players every 2 seconds
         private void MovePointOrb()
         {
             if (!pointOrbs.IntersectsWith(player1) && !pointOrbs.IntersectsWith(player2))
             {
-                if (orbMoveStopwatch.ElapsedMilliseconds >= 5000)
+                if (orbMoveStopwatch.ElapsedMilliseconds >= 2000)
                 {
                     int xNewRandom = randGen.Next(60, 390);
                     int yNewRandom = randGen.Next(60, 340);
@@ -278,50 +312,19 @@ namespace SquareChaser
             }
         }
 
-        private void MoveSpeedOrb()
+        //Make the point orbs move around randomly and when it hit the boundary, teleport to a random position
+        private void HandleAutomaticallyMovement()
         {
-            if (!speedOrbs.IntersectsWith(player1) && !speedOrbs.IntersectsWith(player2))
+            if (pointOrbs.Y > 55 && pointOrbs.Y < 375 && pointOrbs.X > 55 && pointOrbs.X < 425)
             {
-                if (orbMoveStopwatch.ElapsedMilliseconds >= 3000)
-                {
-                    int xNewRandom = randGen.Next(60, 390);
-                    int yNewRandom = randGen.Next(60, 340);
-                    speedOrbs.X = xNewRandom;
-                    speedOrbs.Y = yNewRandom;
-                    orbMoveStopwatch.Restart();
-                }
-            }
-        }
-
-        private void CheckEndGame()
-        {
-            if (player1Score == 5 || player2Speed == 0)
-            {
-                winnerLabel.Text = "Player 1 Win";
-                gameTimer.Stop();
-
-            }
-            else if (player2Score == 5 || player1Speed == 0)
-            {
-                winnerLabel.Text = "Player 2 Win";
-                gameTimer.Stop();
-            }
-        }
-
-
-        private void gameTimer_Tick(object sender, EventArgs e)
-        {
-          
-            if (pointOrbs.Y > 55 && pointOrbs.Y <375 && pointOrbs.X >55 && pointOrbs.X <425)
-            {
-                int xNewRandom = randGen.Next(-2, 2);
-                int yNewRandom = randGen.Next(-2, 2);
+                int xNewRandom = randGen.Next(-5, 5);
+                int yNewRandom = randGen.Next(-5, 5);
                 pointOrbs.Y += yNewRandom;
                 pointOrbs.X += xNewRandom;
 
                 if (pointOrbs.Y <= 55)
                 {
-                   
+
                     yNewRandom = randGen.Next(60, 340);
                     pointOrbs.Y = yNewRandom;
                 }
@@ -342,12 +345,40 @@ namespace SquareChaser
                 }
             }
 
+        }
 
+        //Winning condition
+        private void CheckEndGame()
+        {
+            if (player1Score == 5 || player2Speed == 0 || bulletsPlayer1.IntersectsWith(player2))
+            {
+                winnerLabel.Text = "Player 1 Win";
+                winnerSound.Play();
+                gameTimer.Stop();
+
+            }
+            else if (player2Score == 5 || player1Speed == 0|| bulletsPlayer2.IntersectsWith(player1))
+            {
+                winnerLabel.Text = "Player 2 Win";
+                winnerSound.Play();
+                gameTimer.Stop();
+            }
+        }
+
+        //player 1 and 2 movement, set the bullet direction for every key.
+        private void PlayerMovement()
+        {
 
             if (wPressed == true && player1.Y > 55)
             {
                 player1.Y = player1.Y - player1Speed;
                 bulletsPlayer1.Y = bulletsPlayer1.Y - player1Speed;
+
+                if (gPressed == true)
+                {
+                    bullets1Direction = 1;
+
+                }
 
             }
 
@@ -355,95 +386,120 @@ namespace SquareChaser
             {
                 player1.Y = player1.Y + player1Speed;
                 bulletsPlayer1.Y = bulletsPlayer1.Y + player1Speed;
-
+                if (gPressed == true)
+                {
+                    bullets1Direction = 2;
+                }
             }
 
             if (aPressed == true && player1.X > 55)
             {
                 player1.X = player1.X - player1Speed;
                 bulletsPlayer1.X = bulletsPlayer1.X - player1Speed;
+                if (gPressed == true)
+                {
+                    bullets1Direction = 3;
+                }
             }
 
             if (dPressed == true && player1.X < 425)
             {
                 player1.X = player1.X + player1Speed;
                 bulletsPlayer1.X = bulletsPlayer1.X + player1Speed;
-
+                if (gPressed == true)
+                {
+                    bullets1Direction = 4;
+                }
             }
-
-            // not working
-            if (gPressed == true && bulletsPlayer1.Y>55)
-            { 
-                    bulletsPlayer1.Y -= 3;
-            }
-
-
-
 
             if (upPressed == true && player2.Y > 55)
             {
                 player2.Y = player2.Y - player2Speed;
                 bulletsPlayer2.Y = bulletsPlayer2.Y - player2Speed;
-
+                if (mPressed == true)
+                {
+                    bullets2Direction = 1;
+                }
             }
 
             if (downPressed == true && player2.Y < 375)
             {
                 player2.Y = player2.Y + player2Speed;
                 bulletsPlayer2.Y = bulletsPlayer2.Y + player2Speed;
-
+                if (mPressed == true)
+                {
+                    bullets2Direction = 2;
+                }
             }
 
             if (leftPressed == true && player2.X > 55)
             {
                 player2.X = player2.X - player2Speed;
                 bulletsPlayer2.X = bulletsPlayer2.X - player2Speed;
-
+                if (mPressed == true)
+                {
+                    bullets2Direction = 3;
+                }
             }
 
             if (rightPressed == true && player2.X < 425)
             {
                 player2.X = player2.X + player2Speed;
                 bulletsPlayer2.X = bulletsPlayer2.X + player2Speed;
+                if (mPressed == true)
+                {
+                    bullets2Direction = 4;
+                }
+            }
+        }
+
+        //Bullet direction conditions
+        private void HandleBulletsDirection()
+        {
+            if (bullets1Direction == 1)
+            {
+                bulletsPlayer1.Y -= player1Speed;
+            }
+            else if (bullets1Direction == 2)
+            {
+                bulletsPlayer1.Y += player1Speed;
+            }
+            else if (bullets1Direction == 3)
+            {
+                bulletsPlayer1.X -= player1Speed;
+            }
+            else if (bullets1Direction == 4)
+            {
+                bulletsPlayer1.X += player1Speed;
             }
 
-            //if (player1.Y <= 55)
-            //{
-            //    player1.Y = 375;
-            //}
-            //else if (player1.Y >= 375)
-            //{
-            //    player1.Y = 55;
-            //}
-            //else if (player1.X <= 55)
-            //{
-            //    player1.X = 425;
-            //}
-            //else if (player1.X >= 425)
-            //{
-            //    player1.X = 55;
-            //}
+            if (bullets2Direction == 1)
+            {
+                bulletsPlayer2.Y -= player2Speed;
+            }
+            else if (bullets2Direction == 2)
+            {
+                bulletsPlayer2.Y += player2Speed;
+            }
+            else if (bullets2Direction == 3)
+            {
+                bulletsPlayer2.X -= player2Speed;
+            }
+            else if (bullets2Direction == 4)
+            {
+                bulletsPlayer2.X += player2Speed;
+            }
+        }
 
-            //if (player2.Y <= 55)
-            //{
-            //    player2.Y = 375;
-            //}
-            //else if (player2.Y >= 375)
-            //{
-            //    player2.Y = 55;
-            //}
-            //else if (player2.X <= 55)
-            //{
-            //    player2.X = 425;
-            //}
-            //else if (player2.X >= 425)
-            //{
-            //    player2.X = 55;
-            //}
-
+        //Call all of the methods
+        private void gameTimer_Tick(object sender, EventArgs e)
+        {
+            HandleBulletsDirection();
+            PlayerMovement();
+            HandleAutomaticallyMovement();
             MovePointOrb();
-            MoveSpeedOrb();
-            HandleBoundary(player1);
+            HandleBoundary(ref player1, ref bulletsPlayer1, ref bullets1Direction);
+            HandleBoundary(ref player2, ref bulletsPlayer2, ref bullets2Direction);
             HandlePointOrbIntersections();
             HandleSpeedrInctersection();
             HandleNegativeIntersection();
@@ -451,18 +507,18 @@ namespace SquareChaser
             Refresh();
         }
         
+        // Game Drawing
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
-            //e.Graphics.FillRectangle(blueBrush, player1);
-            //e.Graphics.FillRectangle(pinkBrush, player2);
             e.Graphics.DrawImage(player1Image, player1);
             e.Graphics.DrawImage(player2Image, player2);
             e.Graphics.DrawRectangle(whitePen, 50, 50, 400, 350);
             e.Graphics.FillRectangle(whiteBrush,pointOrbs);
             e.Graphics.FillRectangle(yellowBrush, speedOrbs);
             e.Graphics.FillRectangle(redBrush, negativeOrbs);
-            e.Graphics.FillRectangle(greenBrush, bulletsPlayer1);
-            e.Graphics.FillRectangle(greenBrush, bulletsPlayer2);
+            e.Graphics.DrawImage(player1Image, bulletsPlayer1);
+            e.Graphics.DrawImage(player2Image, bulletsPlayer2);
+            //Game Rules
             e.Graphics.DrawString("Reach 5 to win\nWhite Orbs = point\nYellow Orbs = Speed Boost\nRed Orbs = Negative Boost\nPlayer 1 press G to shoot\nPlayer 2 press M to shoot\n", drawFont, whiteBrush, 50, 420);
         }
     }

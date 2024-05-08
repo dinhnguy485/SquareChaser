@@ -116,5 +116,14 @@ namespace SquareChaser.Properties {
                 return ResourceManager.GetStream("speedPoint", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream winningSound {
+            get {
+                return ResourceManager.GetStream("winningSound", resourceCulture);
+            }
+        }
     }
 }

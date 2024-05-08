@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
             this.player1ScoreLabel = new System.Windows.Forms.Label();
             this.player2ScoreLabel = new System.Windows.Forms.Label();
@@ -80,6 +81,7 @@
             this.Controls.Add(this.player2ScoreLabel);
             this.Controls.Add(this.player1ScoreLabel);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "Square Chaser";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainForm_Paint);
