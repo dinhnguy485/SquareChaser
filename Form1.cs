@@ -46,6 +46,8 @@ namespace SquareChaser
         int player2Speed = 4;
         int bullets1Direction = 0;
         int bullets2Direction = 0;
+        int player1BulletSpeed = 4;
+        int player2BulletSpeed = 4;
 
         //set up players movement.
         bool wPressed = false;
@@ -203,6 +205,7 @@ namespace SquareChaser
             {
                 UpdateNegativeOrb();
                 player1Speed -= 1;
+                player1BulletSpeed -= 1;
                 negativePoint.Play();
             }
 
@@ -210,6 +213,7 @@ namespace SquareChaser
             {
                 UpdateNegativeOrb();
                 player2Speed -= 1;
+                player2BulletSpeed -= 1;
                 negativePoint.Play();
             }
         }
@@ -221,12 +225,14 @@ namespace SquareChaser
             {
                 UpdateSpeedOrb();
                 player1Speed += 1;
+                player1BulletSpeed += 1;
                 speedPoint.Play();
             }
             if (speedOrbs.IntersectsWith(player2))
             {
                 UpdateSpeedOrb();
                 player2Speed += 1;
+                player2BulletSpeed += 1;
                 speedPoint.Play();
             }
         }
@@ -274,6 +280,8 @@ namespace SquareChaser
                 player.X = 55;
                 bullet.X = player.X + 7;
             }
+
+            ////Reset Bullets position when collides with the boundary
 
             if (bullet.Y <= 55)
             {
@@ -373,84 +381,184 @@ namespace SquareChaser
 
             if (wPressed == true && player1.Y > 55)
             {
-                player1.Y = player1.Y - player1Speed;
-                bulletsPlayer1.Y = bulletsPlayer1.Y - player1Speed;
+                if (bullets1Direction == 0)
+                {
+
+                    bulletsPlayer1.X = player1.X + 7;
+                    bulletsPlayer1.Y = player1.Y + 7;
+                    player1.Y = player1.Y - player1Speed;
+                    bulletsPlayer1.Y = bulletsPlayer1.Y - player1BulletSpeed;
+                }
 
                 if (gPressed == true)
                 {
                     bullets1Direction = 1;
 
                 }
+                if (bullets1Direction != 0)
+                {
+                    player1BulletSpeed = 0;
+                    player1.Y = player1.Y - player1Speed;
+                    bulletsPlayer1.Y = bulletsPlayer1.Y - player1BulletSpeed;
+                }
 
             }
 
             if (sPressed == true && player1.Y < 375)
             {
-                player1.Y = player1.Y + player1Speed;
-                bulletsPlayer1.Y = bulletsPlayer1.Y + player1Speed;
+                if (bullets1Direction == 0)
+                {
+                    bulletsPlayer1.X = player1.X + 7;
+                    bulletsPlayer1.Y = player1.Y + 7;
+                    player1.Y = player1.Y + player1Speed;
+                    bulletsPlayer1.Y = bulletsPlayer1.Y + player1BulletSpeed;
+                }
                 if (gPressed == true)
                 {
                     bullets1Direction = 2;
+                }
+                if (bullets1Direction != 0)
+                {
+                    player1BulletSpeed = 0;
+                    player1.Y = player1.Y + player1Speed;
+                    bulletsPlayer1.Y = bulletsPlayer1.Y + player1BulletSpeed;
                 }
             }
 
             if (aPressed == true && player1.X > 55)
             {
-                player1.X = player1.X - player1Speed;
-                bulletsPlayer1.X = bulletsPlayer1.X - player1Speed;
+                if (bullets1Direction == 0)
+                {
+                    bulletsPlayer1.X = player1.X + 7;
+                    bulletsPlayer1.Y = player1.Y + 7;
+                    player1.X = player1.X - player1Speed;
+                    bulletsPlayer1.X = bulletsPlayer1.X - player1BulletSpeed;
+                }
+               
                 if (gPressed == true)
                 {
                     bullets1Direction = 3;
+                }
+                if (bullets1Direction != 0)
+                {
+                    player1BulletSpeed = 0;
+                    player1.X = player1.X - player1Speed;
+                    bulletsPlayer1.X = bulletsPlayer1.X - player1BulletSpeed;
                 }
             }
 
             if (dPressed == true && player1.X < 425)
             {
-                player1.X = player1.X + player1Speed;
-                bulletsPlayer1.X = bulletsPlayer1.X + player1Speed;
+                if (bullets1Direction == 0)
+                {
+                    bulletsPlayer1.X = player1.X + 7;
+                    bulletsPlayer1.Y = player1.Y + 7;
+                    player1.X = player1.X + player1Speed;
+                    bulletsPlayer1.X = bulletsPlayer1.X + player1BulletSpeed;
+                }
+
                 if (gPressed == true)
                 {
                     bullets1Direction = 4;
+                }
+
+                if (bullets1Direction != 0)
+                {
+                    player1BulletSpeed = 0;
+                    player1.X = player1.X + player1Speed;
+                    bulletsPlayer1.X = bulletsPlayer1.X + player1BulletSpeed;
                 }
             }
 
             if (upPressed == true && player2.Y > 55)
             {
-                player2.Y = player2.Y - player2Speed;
-                bulletsPlayer2.Y = bulletsPlayer2.Y - player2Speed;
+                if (bullets2Direction == 0)
+                {
+                    bulletsPlayer2.X = player2.X + 7;
+                    bulletsPlayer2.Y = player2.Y + 7;
+                    player2.Y = player2.Y - player2Speed;
+                    bulletsPlayer2.Y = bulletsPlayer2.Y - player2BulletSpeed;
+                }
+
                 if (mPressed == true)
                 {
                     bullets2Direction = 1;
+                }
+
+                if (bullets2Direction != 0)
+                {
+                    player2BulletSpeed = 0;
+                    player2.Y = player2.Y - player2Speed;
+                    bulletsPlayer2.Y = bulletsPlayer2.Y - player2BulletSpeed;
                 }
             }
 
             if (downPressed == true && player2.Y < 375)
             {
-                player2.Y = player2.Y + player2Speed;
-                bulletsPlayer2.Y = bulletsPlayer2.Y + player2Speed;
+                if (bullets2Direction == 0)
+                {
+                    bulletsPlayer2.X = player2.X + 7;
+                    bulletsPlayer2.Y = player2.Y + 7;
+                    player2.Y = player2.Y + player2Speed;
+                    bulletsPlayer2.Y = bulletsPlayer2.Y + player2BulletSpeed;
+                }
+
                 if (mPressed == true)
                 {
                     bullets2Direction = 2;
+                }
+
+                if (bullets2Direction != 0)
+                {
+                    player2BulletSpeed = 0;
+                    player2.Y = player2.Y + player2Speed;
+                    bulletsPlayer2.Y = bulletsPlayer2.Y + player2BulletSpeed;
                 }
             }
 
             if (leftPressed == true && player2.X > 55)
             {
-                player2.X = player2.X - player2Speed;
-                bulletsPlayer2.X = bulletsPlayer2.X - player2Speed;
+                if (bullets2Direction == 0)
+                {
+                    bulletsPlayer2.X = player2.X + 7;
+                    bulletsPlayer2.Y = player2.Y + 7;
+                    player2.X = player2.X - player2Speed;
+                    bulletsPlayer2.X = bulletsPlayer2.X - player2BulletSpeed;
+                }
+
                 if (mPressed == true)
                 {
                     bullets2Direction = 3;
+                }
+
+                if (bullets2Direction != 0)
+                {
+                    player2BulletSpeed = 0;
+                    player2.X = player2.X - player2Speed;
+                    bulletsPlayer2.X = bulletsPlayer2.X - player2BulletSpeed;
                 }
             }
 
             if (rightPressed == true && player2.X < 425)
             {
-                player2.X = player2.X + player2Speed;
-                bulletsPlayer2.X = bulletsPlayer2.X + player2Speed;
+                if (bullets2Direction == 0)
+                {
+                    bulletsPlayer2.X = player2.X + 7;
+                    bulletsPlayer2.Y = player2.Y + 7;
+                    player2.X = player2.X + player2Speed;
+                    bulletsPlayer2.X = bulletsPlayer2.X + player2BulletSpeed;
+                }
+
                 if (mPressed == true)
                 {
                     bullets2Direction = 4;
+                }
+
+                if (bullets2Direction != 0)
+                {
+                    player2BulletSpeed = 0;
+                    player2.X = player2.X + player2Speed;
+                    bulletsPlayer2.X = bulletsPlayer2.X + player2BulletSpeed;
                 }
             }
         }
